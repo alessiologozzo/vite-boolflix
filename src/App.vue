@@ -1,47 +1,53 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="wrapper">
+    <AppHeader @searched="queryServer()"/>
+    <AppMain />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script >
+  import "../node_modules/axios/dist/axios.js";
+  import { store } from "./assets/store.js";
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+  import AppHeader from './components/AppHeader.vue';
+  import AppMain from './components/AppMain.vue';
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+  export default {
+    name: "App",
+
+    data() {
+      return {
+        store
+      }
+    },
+    components: {
+    AppHeader,
+    AppMain
+  },
+
+  methods: {
+    queryServer(){
+                  if(this.store.start)
+                    this.store.start = false;
+
+                  this.store.movies = [];
+                  let query = "https://api.themoviedb.org/3/search/movie?api_key=8e04c36a1cc28b9de10fdbac8041b534&language=en-US&query=" + this.store.query + "&include_adult=false";
+                  axios.get(query).then( (response) => {
+                    for(let i = 0; i < response.data.results.length; i++)
+                        this.store.movies.push({title: response.data.results[i].title, originalTitle: response.data.results[i].original_title, lang: response.data.results[i].original_language, overview: response.data.results[i].overview, imgSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].poster_path, vote: response.data.results[i].vote_average});
+                    this.store.dim = response.data.results.length;
+                  });
+                }
+  },
+    
   }
+</script>
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+<style lang="scss" scoped>
+  @import "./assets/colors.scss";
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .wrapper{
+    min-height: 100vh;
+    background-color: $main_color;
   }
-}
 </style>
