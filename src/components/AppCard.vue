@@ -2,6 +2,9 @@
     <div class="al-card" @mouseleave="scrollUp($event)" @click="focusFilm()">
         <img :src="cardData.imgSrc" alt="">
         <div class="al-info">
+            <div class="pb-2 text-capitalize">
+                <strong><i>{{ cardData.type }}</i></strong>
+            </div>
             <div class="pb-2">
                 <strong>Title: </strong>
                 <span>{{ cardData.title }}</span>
@@ -107,20 +110,7 @@
         name: "AppCard",
 
         props: { 
-            cardData: {
-                title: String,
-                originalTitle: String,
-                lang: String,
-                overview: String,
-                imgSrc: String,
-                vote: Number,
-                id: Number,
-                voteCount: Number,
-                popularity: Number,
-                releaseDate: String,
-                backdropSrc: String,
-                genreIds: []
-            }
+            cardData: {}
         },
 
         methods: {
@@ -133,25 +123,25 @@
 
                 if(this.cardData.vote < 1)
                     result = 0;
-                else if(this.cardData.vote >= 1 && this.cardData.vote < 2)
+                else if(this.cardData.vote >= 1 && this.cardData.vote < 3)
                     result = 0.5;
-                else if(this.cardData.vote >= 2 && this.cardData.vote < 3)
+                else if(this.cardData.vote >= 3 && this.cardData.vote < 3.6)
                     result = 1;
-                else if(this.cardData.vote >= 3 && this.cardData.vote < 4)
+                else if(this.cardData.vote >= 3.6 && this.cardData.vote < 4.2)
                     result = 1.5;
-                else if(this.cardData.vote >= 4 && this.cardData.vote < 5)
+                else if(this.cardData.vote >= 4.2 && this.cardData.vote < 5)
                     result = 2;
                 else if(this.cardData.vote >= 5 && this.cardData.vote < 6)
                     result = 2.5
                 else if(this.cardData.vote >= 6 && this.cardData.vote < 7)
                     result = 3;
-                else if(this.cardData.vote >= 7 && this.cardData.vote < 8)
+                else if(this.cardData.vote >= 7 && this.cardData.vote < 7.55)
                     result = 3.5;
-                else if(this.cardData.vote >= 8 && this.cardData.vote < 9)
+                else if(this.cardData.vote >= 7.55 && this.cardData.vote < 8)
                     result = 4;
-                else if(this.cardData.vote >= 9 && this.cardData.vote < 10)
+                else if(this.cardData.vote >= 8 && this.cardData.vote < 8.5)
                     result = 4.5;
-                else if(this.cardData.vote >= 10)
+                else if(this.cardData.vote >= 8.5)
                     result = 5;
 
                 return result;

@@ -3,11 +3,11 @@
         {{ queryServer() }}
     </div>
     <div class="col-12 col-lg-6">
-        <img :src="movieData.backdropSrc" alt="">
+        <img :src="data.backdropSrc" alt="">
     </div>
     <div class="col-12 col-lg-6 d-flex flex-lg-column justify-content-center align-items-center align-items-lg-start gap-5 gap-lg-3 ps-4 pr-3 flex-wrap text-center pt-4 pt-lg-0">
-        <h2>{{ movieData.title }}</h2>
-        <h4 v-if="movieData.title != movieData.originalTitle">{{ movieData.originalTitle }}</h4>
+        <h2>{{ data.title }}</h2>
+        <h4 v-if="data.title != data.originalTitle">{{ data.originalTitle }}</h4>
         <h4 class="text-warning">
             <span v-if="howManyStars() == -1">Not Available</span>
                 <span v-else-if="howManyStars() == 0">
@@ -89,36 +89,62 @@
                 </span>
         </h4>
 
-        <h4>{{ movieData.voteCount }} Reviews</h4>
+        <h4>{{ data.voteCount }} Reviews</h4>
 
-        <h4>{{ movieData.releaseDate }}</h4>
+        <h4>{{ data.releaseDate }}</h4>
 
-        <h4>{{ movieData.popularity }} Popularity</h4>
+        <h4>{{ displayPopularity() }} Popularity Score</h4>
     </div>
 
     <hr>
 
-    <div v-if="additionalData.tagline != ''" class="pb-4">
-        <h5><i>"{{ additionalData.tagline }}"</i></h5>
+    <div v-if="data.type == 'movie' && additionalMovieData.tagline != ''" class="pb-4">
+        <h5><i>"{{ additionalMovieData.tagline }}"</i></h5>
     </div>
 
-    <div class="col-12">{{ movieData.overview }}</div>
+    <div class="col-12">{{ data.overview }}</div>
 
-    <div class="pt-5"> 
-        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchWord() }}</h6>  <h5 class="d-inline pe-5">{{ genresIdsToString() }}</h5>
+    <div v-if="genresIdsToString().length > 2" class="pt-5 text-capitalize"> 
+        <h5><i>{{ data.type }}</i></h5>
     </div>
-    <div class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">Runtime:</h6> <h5 class="d-inline">{{ additionalData.runtime }} minutes</h5>
+
+    <div v-if="genresIdsToString().length > 2" class="pt-2"> 
+        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchGenreWord() }}</h6>  <h5 class="d-inline pe-5">{{ genresIdsToString() }}</h5>
+    </div>
+
+    <div v-if="data.type=='movie'" class="pt-2">
+        <h6 class="d-inline pe-2 text-decoration-underline">Runtime:</h6> <h5 class="d-inline">{{ additionalMovieData.runtime }} minutes</h5>
     </div>
     
-    <div v-if="additionalData.budget > 0 && additionalData.revenue > 0">
-        <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Budget:</h6> <h5 class="d-inline"> {{ showNumber(additionalData.budget) }}</h5>
-        </div>
-        <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Revenue:</h6> <h5 class="d-inline"> {{ showNumber(additionalData.revenue) }}</h5>
-        </div>
+    <div v-if="additionalTvData.showRunners.length > 0" class="pt-2">
+        <h6 class="d-inline pe-2 text-decoration-underline">Status: </h6> <h5 class="d-inline"> {{ displayStatus() }}</h5>
+    </div>
 
+    <div v-if="data.type == 'movie' && additionalMovieData.budget > 0 && additionalMovieData.revenue > 0">
+        <div class="pt-2">
+            <h6 class="d-inline pe-2 text-decoration-underline">Budget:</h6> <h5 class="d-inline"> {{ showNumber(additionalMovieData.budget) }}</h5>
+        </div>
+        <div class="pt-2">
+            <h6 class="d-inline pe-2 text-decoration-underline">Revenue:</h6> <h5 class="d-inline"> {{ showNumber(additionalMovieData.revenue) }}</h5>
+        </div>
+    </div>
+    <div v-else-if="data.type == 'tv show' && additionalTvData.seasonNumber > 0 && additionalTvData.episodeNumber > 0">
+        <div class="pt-2">
+            <h6 class="d-inline pe-2 text-decoration-underline">Seasons:</h6> <h5 class="d-inline"> {{ additionalTvData.seasonNumber }}</h5>
+        </div>
+        <div class="pt-2">
+            <h6 class="d-inline pe-2 text-decoration-underline">Episodes:</h6> <h5 class="d-inline"> {{ additionalTvData.episodeNumber }}</h5>
+        </div>
+    </div>
+
+    <div v-if="additionalTvData.runtime > 0">
+        <div class="pt-2">
+            <h6 class="d-inline pe-2 text-decoration-underline">Episode runtime:</h6> <h5 class="d-inline">{{ additionalTvData.runtime }} minutes</h5>
+        </div>
+    </div>
+
+    <div v-if="additionalTvData.showRunners.length > 0" class="pt-2">
+        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchShowRunnerWord() }}</h6> <h5 class="d-inline"> {{ displayShowRunners() }}</h5>
     </div>
 
     <hr>
@@ -147,73 +173,82 @@
             return {
                 store,
                 creditsDatas: [],
-                additionalData: {runtime: String, budget: String, revenue: String, tagline: String}
+                additionalMovieData: {runtime: String, budget: String, revenue: String, tagline: String},
+                additionalTvData: {runtime: String, inProduction: String, seasonNumber: Number, episodeNumber: Number, showRunners: []}
             }
         },
 
         props: {
-            movieData: {
-                title: String,
-                originalTitle: String,
-                lang: String,
-                overview: String,
-                imgSrc: String,
-                vote: Number,
-                id: Number,
-                voteCount: Number,
-                popularity: Number,
-                releaseDate: String,
-                backdropSrc: String,
-                genreIds: []
-            },
+            data: {}
         },
         
         methods: {
             queryServer(){
                 this.store.focus.hasQueried = true;
-                let query = "https://api.themoviedb.org/3/movie/" + this.movieData.id + "/credits?api_key=8e04c36a1cc28b9de10fdbac8041b534";
+                let query;
+                if(this.data.type == "movie")
+                    query = "https://api.themoviedb.org/3/movie/" + this.data.id + "/credits?api_key=8e04c36a1cc28b9de10fdbac8041b534";
+                else
+                    query = "https://api.themoviedb.org/3/tv/" + this.data.id + "/credits?api_key=8e04c36a1cc28b9de10fdbac8041b534";
 
                 axios.get(query).then((response) => {
 
-                    for(let i = 0; i < response.data.cast.length && i < 12; i++)
-                        this.creditsDatas.push({actor: response.data.cast[i].name, character: response.data.cast[i].character, profileSrc: "https://image.tmdb.org/t/p/original" + response.data.cast[i].profile_path});
+                    let d = 12;
+                    for(let i = 0; i < response.data.cast.length && i < d; i++)
+                        if(!this.isNullImage("https://image.tmdb.org/t/p/original" + response.data.cast[i].profile_path))
+                            this.creditsDatas.push({actor: response.data.cast[i].name, character: response.data.cast[i].character, profileSrc: "https://image.tmdb.org/t/p/original" + response.data.cast[i].profile_path});
+                        else
+                            d++;
                 });
 
-                query = "https://api.themoviedb.org/3/movie/" + this.movieData.id + "?api_key=8e04c36a1cc28b9de10fdbac8041b534";
+                if(this.data.type == "movie"){
+                    query = "https://api.themoviedb.org/3/movie/" + this.data.id + "?api_key=8e04c36a1cc28b9de10fdbac8041b534";
 
-                axios.get(query).then((response) => {
-                    this.additionalData.runtime = response.data.runtime.toString();
-                    this.additionalData.budget = response.data.budget.toString();
-                    this.additionalData.revenue = response.data.revenue.toString();
-                    this.additionalData.tagline = response.data.tagline.toString();
-                });
+                    axios.get(query).then((response) => {
+                    this.additionalMovieData.runtime = response.data.runtime.toString();
+                    this.additionalMovieData.budget = response.data.budget.toString();
+                    this.additionalMovieData.revenue = response.data.revenue.toString();
+                    this.additionalMovieData.tagline = response.data.tagline.toString();
+                    });
+                }
+                else{
+                    query = "https://api.themoviedb.org/3/tv/" + this.data.id + "?api_key=8e04c36a1cc28b9de10fdbac8041b534";
+
+                    axios.get(query).then((response) => {
+                    this.additionalTvData.runtime = response.data.episode_run_time.toString();
+                    this.additionalTvData.inProduction = response.data.in_production;
+                    this.additionalTvData.seasonNumber = response.data.number_of_seasons;
+                    this.additionalTvData.episodeNumber = response.data.number_of_episodes;
+                    this.additionalTvData.showRunners = response.data.created_by;
+                    });
+                }
 
             },
 
             howManyStars(){
                 let result = -1;
 
-                if(this.movieData.vote < 1)
+                if(this.data.vote < 1)
                     result = 0;
-                else if(this.movieData.vote >= 1 && this.movieData.vote < 2)
+                else if(this.data.vote >= 1 && this.data.vote < 3)
                     result = 0.5;
-                else if(this.movieData.vote >= 2 && this.movieData.vote < 3)
+                else if(this.data.vote >= 3 && this.data.vote < 3.6)
                     result = 1;
-                else if(this.movieData.vote >= 3 && this.movieData.vote < 4)
+                else if(this.data.vote >= 3.6 && this.data.vote < 4.2)
                     result = 1.5;
-                else if(this.movieData.vote >= 4 && this.movieData.vote < 5)
+                else if(this.data.vote >= 4.2 && this.data.vote < 5)
                     result = 2;
-                else if(this.movieData.vote >= 5 && this.movieData.vote < 6)
+                else if(this.data.vote >= 5 && this.data.vote < 6)
                     result = 2.5
-                else if(this.movieData.vote >= 6 && this.movieData.vote < 7)
+                else if(this.data.vote >= 6 && this.data.vote < 7)
                     result = 3;
-                else if(this.movieData.vote >= 7 && this.movieData.vote < 8)
+                else if(this.data.vote >= 7 && this.data.vote < 7.55)
                     result = 3.5;
-                else if(this.movieData.vote >= 8 && this.movieData.vote < 9)
+                else if(this.data.vote >= 7.55 && this.data.vote < 8)
                     result = 4;
-                else if(this.movieData.vote >= 9 && this.movieData.vote < 10)
+                else if(this.data.vote >= 8 && this.data.vote < 8.5)
                     result = 4.5;
-                else if(this.movieData.vote >= 10)
+                else if(this.data.vote >= 8.5)
                     result = 5;
 
                 return result;
@@ -222,8 +257,8 @@
             genresIdsToString(){
                 let result = "";
 
-                for(let i = 0; i < this.movieData.genreIds.length; i++){
-                    switch(this.movieData.genreIds[i]){
+                for(let i = 0; i < this.data.genreIds.length; i++){
+                    switch(this.data.genreIds[i]){
                         case 28:
                             result += "Action";
                             break;
@@ -299,21 +334,94 @@
                         case 37:
                             result += "Western";
                             break;
+
+                        case 10759:
+                            result += "Action & Adventure";
+                            break;
+
+                        case 10762:
+                            result += "Kids";
+                            break;
+
+                        case 10763:
+                            result += "News";
+                            break;
+
+                        case 10764:
+                            result += "Reality";
+                            break;
+
+                        case 10765:
+                            result += "Sci-Fi & Fantasy"
+                            break;
+
+                        case 10766:
+                            result += "Soap";
+                            break;
+
+                        case 10767:
+                            result += "Talk";
+                            break;
+
+                        case 10768:
+                            result += "War & Politics";
+                            break;
                     }
 
-                    if(i + 1 < this.movieData.genreIds.length)
+                    if(i + 1 < this.data.genreIds.length)
                         result += ", "; 
                 }
 
                 return result;
             },
 
-            witchWord(){
+            witchGenreWord(){
                 let result = "Genre"
-                if(this.movieData.genreIds.length > 1)
+                if(this.data.genreIds.length > 1)
                     result += "s";
 
                 result += ":";
+
+                return result;
+            },
+
+            witchShowRunnerWord(){
+                let result = "Showrunner";
+
+                if(this.additionalTvData.showRunners.length > 1)
+                    result += "s";
+
+                result += ":";
+
+                return result;
+            },
+
+            displayShowRunners(){
+                let result = "";
+
+                for(let i = 0; i < this.additionalTvData.showRunners.length; i++){
+                    result += this.additionalTvData.showRunners[i].name;
+                    if(i + 1 < this.additionalTvData.showRunners.length)
+                        result += ", ";
+                }
+                    
+                return result;
+            },
+
+            displayPopularity(){
+                let s = this.data.popularity.toString();
+                let result = s.split(".");
+
+                return result[0];
+            },
+
+            displayStatus(){
+                let result = "";
+
+                if(this.additionalTvData.inProduction)
+                    result = "In Production";
+                else
+                    result = "Ended";
 
                 return result;
             },
@@ -342,7 +450,17 @@
 
                 let result = charArray.join("");
                 return result;
-            }
+            },
+
+            isNullImage(src){
+                let result = false;
+
+                let s = src.split("null");
+                if(s[1] != undefined )
+                    result = true;
+
+                return result;
+    },
         }
     }
 </script>

@@ -4,10 +4,22 @@
             <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back" @click="store.focus.isFocused = false; store.focus.hasQueried = false;"></i>
             <h1 class="text-danger m-0">boolflix</h1>
         </div>
-        <div class="position-relative">
-            <input type="text" placeholder="Search..."  v-model="input" @keyup.enter="search()">
-            <div class="img-container" @click="search()">
-                <img src="../assets/img/magnifying-glass.svg" alt="magnyfing-glass">
+        <div class="d-flex flex-column">
+            <div class="position-relative">
+                <input type="text" placeholder="Search..."  v-model="input" @keyup.enter="search()">
+                <div class="img-container" @click="search()">
+                    <img src="../assets/img/magnifying-glass.svg" alt="magnyfing-glass">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end pt-1">
+                <select @change="changeFilter($event)" class="p-1">
+                    <option value="popularity">Popularity</option>
+                    <option value="vote">Vote</option>
+                    <option value="review">Reviews Number</option>
+                    <option value="movie">Only movies</option>
+                    <option value="tv">Only tv shows</option>
+                </select>
             </div>
         </div>
     </header>
@@ -28,7 +40,7 @@
 
         methods: {
             search(){
-                if(this.isInputValid()){
+                if(this.isInputValid(this.input)){
                     this.store.query = this.input;
                     this.store.lastSearch = this.input;
                     this.input = "";
@@ -36,13 +48,31 @@
                 }
             },
 
-            isInputValid(){
+            isInputValid(s){
                 let result = false;
 
-                if(this.input.length > 0)
-                    result = true;
+                if(s.length > 0)
+                    if(!this.areAllSpaces(s))
+                        result = true;
 
                 return result;
+            },
+
+            areAllSpaces(s){
+                let result = true;
+
+                for(let i = 0; i < s.length && result; i++)
+                    if(s[i] != " ")
+                        result = false;
+
+                return result;
+            },
+
+            changeFilter(e){
+                this.store.filter = e.target.value;
+                if(this.isInputValid(this.store.query) && !this.store.focus.isFocused){
+                    this.$emit("searched");
+                }
             }
         },
     }
@@ -55,7 +85,7 @@
         align-items: center;
         background-color: rgb(20, 20, 20);
         text-transform: uppercase;
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
     }
 
     input[type="text"]{
@@ -71,6 +101,10 @@
     ::placeholder{
         color: black;
         opacity: 0.7;
+    }
+
+    select{
+        cursor: pointer;
     }
 
     .img-container{
@@ -124,6 +158,12 @@
     @media screen and (min-width: 992px) {
         input[type="text"]{
             width: 400px;
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+        input[type="text"]{
+            width: 450px;
         }
     }
 </style>

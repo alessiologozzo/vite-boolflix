@@ -1,10 +1,11 @@
 import { reactive } from "vue";
 
 export let store = reactive({
-    movies: [],
+    datas: [],
     query: "",
     dim: 0,
     start: true,
     focus: {isFocused: false, hasQueried: false},
-    lastSearch: ""
+    lastSearch: "",
+    filter: "popularity"
 });
