@@ -1,42 +1,56 @@
 <template>
-    <main class="row w-100 px-3 pt-4 pb-5">
+    <main class="w-100">
 
-        <div v-if="store.start" class=" d-flex justify-content-center align-items-center">
-            <h3 class="al-welcome">Use the search bar to search for all the movies you want!</h3>
+        <div v-if="!store.focus.isFocused" class="row w-100 px-3 pt-4 pb-5">
+            <div v-if="store.start" class=" d-flex justify-content-center align-items-center">
+                <h3 class="al-welcome">Use the search bar to search for all the movies you want!</h3>
+            </div>
+            <div v-else class="px-4 pb-4">
+                <h4 class="al-found">Found {{ store.dim }}  {{ witchWord() }} for <i>"{{ store.lastSearch }}"</i></h4>
+            </div>
+            <div v-for="movie in store.movies" class="col-12 col-sm-6 col-md-4 col-lg-3 pb-5 px-4">
+                <AppCard :cardData="movie" @focusFilm="onFocus($event)"/>
+            </div>
         </div>
-        <div v-else class="px-4 pb-4">
-            <h4 class="al-found">Found {{ store.dim }}  {{ wichWord() }}</h4>
-        </div>
-        <div v-for="movie in store.movies" class="col-12 col-sm-6 col-md-4 col-lg-3 pb-5 px-4">
-            <AppCard :cardData="movie" />
+        <div v-else class="row px-3 pt-4 pb-5">
+            <AppFocus :movieData="focusData"/>
         </div>
     </main>
 </template>
 
 <script >
     import { store } from "../assets/store.js";
+
     import AppCard from "./AppCard.vue";
+    import AppFocus from "./AppFocus.vue";
 
     export default {
         name: "AppMain",
 
         components: {
-            AppCard
+            AppCard,
+            AppFocus
         },
 
         data() {
             return {
-                store
+                store,
+                focusData: null
             }
         },
 
         methods: {
-            wichWord(){
+            witchWord(){
                 let result = "result";
                 if(this.store.dim > 1 || this.store.dim == 0)
                     result += "s";
 
                 return result;
+            },
+
+            onFocus(e){
+                this.store.focus.isFocused = true;
+                this.focusData = e;
             }
         },
     }
@@ -47,6 +61,7 @@
 
     main{
         background-color: $main_color;
+        overflow: hidden;
     }
 
     .al-welcome{
@@ -55,6 +70,7 @@
         border-radius: 20px;
         padding: 0.3rem 1.5rem;
         text-align: center;
+        margin-top: 2rem;
     }
 
     .al-found{

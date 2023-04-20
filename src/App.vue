@@ -30,14 +30,16 @@
                   if(this.store.start)
                     this.store.start = false;
 
+                  this.store.focus.isFocused = false;
+                  this.store.focus.hasQueried = false;
                   this.store.movies = [];
                   let query = "https://api.themoviedb.org/3/search/movie?api_key=8e04c36a1cc28b9de10fdbac8041b534&language=en-US&query=" + this.store.query + "&include_adult=false";
                   axios.get(query).then( (response) => {
                     for(let i = 0; i < response.data.results.length; i++)
-                        this.store.movies.push({title: response.data.results[i].title, originalTitle: response.data.results[i].original_title, lang: response.data.results[i].original_language, overview: response.data.results[i].overview, imgSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].poster_path, vote: response.data.results[i].vote_average});
+                        this.store.movies.push({title: response.data.results[i].title, originalTitle: response.data.results[i].original_title, lang: response.data.results[i].original_language, overview: response.data.results[i].overview, imgSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].poster_path, vote: response.data.results[i].vote_average, id: response.data.results[i].id, voteCount: response.data.results[i].vote_count, popularity: response.data.results[i].popularity, releaseDate: response.data.results[i].release_date, backdropSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].backdrop_path, genreIds: response.data.results[i].genre_ids});
                     this.store.dim = response.data.results.length;
                   });
-                }
+    }
   },
     
   }

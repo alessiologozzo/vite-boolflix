@@ -1,6 +1,9 @@
 <template>
     <header>
-        <h1 class="text-danger">boolflix</h1>
+        <div class="d-flex align-items-center">
+            <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back" @click="store.focus.isFocused = false; store.focus.hasQueried = false;"></i>
+            <h1 class="text-danger m-0">boolflix</h1>
+        </div>
         <div class="position-relative">
             <input type="text" placeholder="Search..."  v-model="input" @keyup.enter="search()">
             <div class="img-container" @click="search()">
@@ -27,6 +30,8 @@
             search(){
                 if(this.isInputValid()){
                     this.store.query = this.input;
+                    this.store.lastSearch = this.input;
+                    this.input = "";
                     this.$emit("searched");
                 }
             },
@@ -90,6 +95,20 @@
     h1{
         font-family: 'Alkatra', cursive;
     }
+
+    .al-back{
+        font-size: 1.5rem;
+        transition: all 300ms;
+        cursor: pointer;
+        padding: 0 0.5rem;
+        margin-right: 0.5rem;
+
+        &:hover{
+            transform: scale(1.2);
+            color: lightgreen;
+        }
+    }
+
     @media screen and (min-width: 576px) {
         input[type="text"]{
             width: 250px;

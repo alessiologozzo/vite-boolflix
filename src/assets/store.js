@@ -4,5 +4,7 @@ export let store = reactive({
     movies: [],
     query: "",
     dim: 0,
-    start: true
+    start: true,
+    focus: {isFocused: false, hasQueried: false},
+    lastSearch: ""
 });

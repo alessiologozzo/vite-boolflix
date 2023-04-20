@@ -1,6 +1,6 @@
 <template>
-    <div class="al-card" @mouseleave="scrollUp($event)">
-        <img :src="cardData.imgSrc" alt="err">
+    <div class="al-card" @mouseleave="scrollUp($event)" @click="focusFilm()">
+        <img :src="cardData.imgSrc" alt="">
         <div class="al-info">
             <div class="pb-2">
                 <strong>Title: </strong>
@@ -113,7 +113,13 @@
                 lang: String,
                 overview: String,
                 imgSrc: String,
-                vote: Number
+                vote: Number,
+                id: Number,
+                voteCount: Number,
+                popularity: Number,
+                releaseDate: String,
+                backdropSrc: String,
+                genreIds: []
             }
         },
 
@@ -149,6 +155,10 @@
                     result = 5;
 
                 return result;
+            },
+
+            focusFilm(){
+                this.$emit("focusFilm", this.cardData);
             }
         },
     }
