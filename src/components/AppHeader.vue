@@ -1,7 +1,7 @@
 <template>
     <header>
         <div class="d-flex align-items-center">
-            <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back" @click="store.focus.isFocused = false; store.focus.hasQueried = false;"></i>
+            <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back" @click="onClick()"></i>
             <h1 class="text-danger m-0">boolflix</h1>
         </div>
         <div class="d-flex flex-column">
@@ -73,6 +73,12 @@
                 if(this.isInputValid(this.store.query) && !this.store.focus.isFocused){
                     this.$emit("searched");
                 }
+            },
+
+            onClick(){
+                store.focus.isFocused = false; 
+                store.focus.hasQueried = false; 
+                this.$emit("searched");
             }
         },
     }
