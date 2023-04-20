@@ -133,7 +133,6 @@
 </template>
 
 <script>
-    import "../../node_modules/axios/dist/axios.js";
     import { store } from "../assets/store";
     import AppActor from "./AppActor.vue";
 
