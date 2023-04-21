@@ -151,25 +151,31 @@
 
     @media screen and (min-width: 576px) {
         input[type="text"]{
-            width: 250px;
+            width: 280px;
         }
     }
 
     @media screen and (min-width: 768px) {
         input[type="text"]{
-            width: 320px;
+            width: 360px;
         }
     }
 
     @media screen and (min-width: 992px) {
         input[type="text"]{
-            width: 400px;
+            width: 450px;
         }
     }
 
     @media screen and (min-width: 1200px) {
         input[type="text"]{
-            width: 450px;
+            width: 520px;
+        }
+    }
+
+    @media screen and (min-width: 1400px) {
+        input[type="text"]{
+            width: 580px;
         }
     }
 </style>

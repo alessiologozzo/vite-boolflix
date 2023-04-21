@@ -147,6 +147,13 @@
         <h6 class="d-inline pe-2 text-decoration-underline">{{ witchShowRunnerWord() }}</h6> <h5 class="d-inline"> {{ displayShowRunners() }}</h5>
     </div>
 
+    <div v-if="data.type == 'movie' && additionalMovieData.countries.length > 0" class="pt-2">
+        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchCountryWord(additionalMovieData.countries) }}</h6> <h5 class="d-inline"> {{ displayCountries(additionalMovieData.countries) }}</h5>
+    </div>
+    <div v-else-if="data.type == 'tv show' && additionalTvData.countries.length > 0" class="pt-2">
+        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchCountryWord(additionalTvData.countries) }}</h6> <h5 class="d-inline"> {{ displayCountries(additionalTvData.countries) }}</h5>
+    </div>
+
     <hr>
 
     <div class="col-12">
@@ -173,8 +180,8 @@
             return {
                 store,
                 creditsDatas: [],
-                additionalMovieData: {runtime: String, budget: String, revenue: String, tagline: String},
-                additionalTvData: {runtime: String, inProduction: String, seasonNumber: Number, episodeNumber: Number, showRunners: []}
+                additionalMovieData: {runtime: String, budget: String, revenue: String, tagline: String, countries: []},
+                additionalTvData: {runtime: String, inProduction: String, seasonNumber: Number, episodeNumber: Number, showRunners: [], countries: []}
             }
         },
 
@@ -209,6 +216,7 @@
                     this.additionalMovieData.budget = response.data.budget.toString();
                     this.additionalMovieData.revenue = response.data.revenue.toString();
                     this.additionalMovieData.tagline = response.data.tagline.toString();
+                    this.additionalMovieData.countries = response.data.production_countries;
                     });
                 }
                 else{
@@ -220,6 +228,7 @@
                     this.additionalTvData.seasonNumber = response.data.number_of_seasons;
                     this.additionalTvData.episodeNumber = response.data.number_of_episodes;
                     this.additionalTvData.showRunners = response.data.created_by;
+                    this.additionalTvData.countries = response.data.production_countries;
                     });
                 }
 
@@ -392,6 +401,27 @@
                     result += "s";
 
                 result += ":";
+
+                return result;
+            },
+
+            witchCountryWord(countries){
+                let result = "Production Country:";
+
+                if(countries.length > 1)
+                    result = "Production Countries:";
+
+                return result;
+            },
+
+            displayCountries(countries){
+                let result = "";
+
+                for(let i = 0; i < countries.length; i++){
+                    result += countries[i].name;
+                    if(i + 1 < countries.length)
+                        result += ", ";
+                }
 
                 return result;
             },
