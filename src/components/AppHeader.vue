@@ -1,7 +1,7 @@
 <template>
     <header>
         <div class="d-flex align-items-center">
-            <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back" @click="onClick()"></i>
+            <i v-if="store.focus.isFocused" class="fa-solid fa-chevron-left al-back al-transform me-0 me-sm-1" @click="onClick()"></i>
             <h1 class="text-danger m-0">boolflix</h1>
         </div>
         <div class="d-flex flex-column">
@@ -95,7 +95,7 @@
     }
 
     input[type="text"]{
-        width: 230px;
+        width: 215px;
         height: 2.5rem;
         padding: 0 3.5rem 0 0.4rem;
         background-color: white;
@@ -141,12 +141,15 @@
         transition: all 300ms;
         cursor: pointer;
         padding: 0 0.5rem;
-        margin-right: 0.5rem;
 
         &:hover{
-            transform: scale(1.2);
+            transform: scale(1.2) translateY(-10%);
             color: lightgreen;
         }
+    }
+
+    .al-transform{
+        transform: translateY(-14%);
     }
 
     @media screen and (min-width: 576px) {
