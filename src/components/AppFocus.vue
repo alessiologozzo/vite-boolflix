@@ -91,7 +91,7 @@
 
         <h4>{{ data.voteCount }} Reviews</h4>
 
-        <h4>{{ data.releaseDate }}</h4>
+        <h4 v-if="data.releaseDate.length > 2">{{ data.releaseDate }}</h4>
 
         <h4>{{ displayPopularity() }} Popularity Score</h4>
     </div>
@@ -104,54 +104,54 @@
 
     <div class="col-12">{{ data.overview }}</div>
 
-    <div v-if="genresIdsToString().length > 2" class="pt-5 text-capitalize"> 
+    <div class="pt-5 text-capitalize"> 
         <h5><i>{{ data.type }}</i></h5>
     </div>
 
     <div v-if="genresIdsToString().length > 2" class="pt-2"> 
-        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchGenreWord() }}</h6>  <h5 class="d-inline pe-5">{{ genresIdsToString() }}</h5>
+        <h6 class="d-inline text-decoration-underline">{{ witchGenreWord() }}</h6><span class="pe-2">:</span>  <h5 class="d-inline pe-5">{{ genresIdsToString() }}</h5>
     </div>
 
-    <div v-if="data.type=='movie'" class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">Runtime:</h6> <h5 class="d-inline">{{ additionalMovieData.runtime }} minutes</h5>
+    <div v-if="data.type == 'movie'" class="pt-2">
+        <h6 class="d-inline text-decoration-underline">Runtime</h6><span class="pe-2">:</span> <h5 class="d-inline">{{ additionalMovieData.runtime }} minutes</h5>
     </div>
     
-    <div v-if="additionalTvData.showRunners.length > 0" class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">Status: </h6> <h5 class="d-inline"> {{ displayStatus() }}</h5>
+    <div v-if="data.type == 'tv show' && additionalTvData.showRunners.length > 0" class="pt-2">
+        <h6 class="d-inline text-decoration-underline">Status</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ displayStatus() }}</h5>
     </div>
 
     <div v-if="data.type == 'movie' && additionalMovieData.budget > 0 && additionalMovieData.revenue > 0">
         <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Budget:</h6> <h5 class="d-inline"> {{ showNumber(additionalMovieData.budget) }}</h5>
+            <h6 class="d-inline text-decoration-underline">Budget</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ showNumber(additionalMovieData.budget) }}</h5>
         </div>
         <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Revenue:</h6> <h5 class="d-inline"> {{ showNumber(additionalMovieData.revenue) }}</h5>
+            <h6 class="d-inline text-decoration-underline">Revenue</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ showNumber(additionalMovieData.revenue) }}</h5>
         </div>
     </div>
     <div v-else-if="data.type == 'tv show' && additionalTvData.seasonNumber > 0 && additionalTvData.episodeNumber > 0">
         <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Seasons:</h6> <h5 class="d-inline"> {{ additionalTvData.seasonNumber }}</h5>
+            <h6 class="d-inline text-decoration-underline">Seasons</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ additionalTvData.seasonNumber }}</h5>
         </div>
         <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Episodes:</h6> <h5 class="d-inline"> {{ additionalTvData.episodeNumber }}</h5>
+            <h6 class="d-inline text-decoration-underline">Episodes</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ additionalTvData.episodeNumber }}</h5>
         </div>
     </div>
 
-    <div v-if="additionalTvData.runtime > 0">
+    <div v-if="data.type == 'tv show' && additionalTvData.runtime > 0">
         <div class="pt-2">
-            <h6 class="d-inline pe-2 text-decoration-underline">Episode runtime:</h6> <h5 class="d-inline">{{ additionalTvData.runtime }} minutes</h5>
+            <h6 class="d-inline text-decoration-underline">Episode runtime</h6><span class="pe-2">:</span> <h5 class="d-inline">{{ additionalTvData.runtime }} minutes</h5>
         </div>
     </div>
 
-    <div v-if="additionalTvData.showRunners.length > 0" class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchShowRunnerWord() }}</h6> <h5 class="d-inline"> {{ displayShowRunners() }}</h5>
+    <div v-if="data.type == 'tv show' && additionalTvData.showRunners.length > 0" class="pt-2">
+        <h6 class="d-inline text-decoration-underline">{{ witchShowRunnerWord() }}</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ displayShowRunners() }}</h5>
     </div>
 
     <div v-if="data.type == 'movie' && additionalMovieData.countries.length > 0" class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchCountryWord(additionalMovieData.countries) }}</h6> <h5 class="d-inline"> {{ displayCountries(additionalMovieData.countries) }}</h5>
+        <h6 class="d-inline text-decoration-underline">{{ witchCountryWord(additionalMovieData.countries) }}</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ displayCountries(additionalMovieData.countries) }}</h5>
     </div>
     <div v-else-if="data.type == 'tv show' && additionalTvData.countries.length > 0" class="pt-2">
-        <h6 class="d-inline pe-2 text-decoration-underline">{{ witchCountryWord(additionalTvData.countries) }}</h6> <h5 class="d-inline"> {{ displayCountries(additionalTvData.countries) }}</h5>
+        <h6 class="d-inline text-decoration-underline">{{ witchCountryWord(additionalTvData.countries) }}</h6><span class="pe-2">:</span> <h5 class="d-inline"> {{ displayCountries(additionalTvData.countries) }}</h5>
     </div>
 
     <hr>
@@ -389,8 +389,6 @@
                 if(this.data.genreIds.length > 1)
                     result += "s";
 
-                result += ":";
-
                 return result;
             },
 
@@ -400,16 +398,14 @@
                 if(this.additionalTvData.showRunners.length > 1)
                     result += "s";
 
-                result += ":";
-
                 return result;
             },
 
             witchCountryWord(countries){
-                let result = "Production Country:";
+                let result = "Production Country";
 
                 if(countries.length > 1)
-                    result = "Production Countries:";
+                    result = "Production Countries";
 
                 return result;
             },

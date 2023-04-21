@@ -6,7 +6,7 @@
                 <h3 class="al-welcome">Use the search bar to search for all the movies and tv shows you want!</h3>
             </div>
             <div v-else class="px-4 pb-4">
-                <h4 class="al-found">Found {{ store.dim }}  {{ witchWord() }} for <i>"{{ store.lastSearch }}"</i></h4>
+                <h4 class="al-found">Found {{ store.datas.length }}  {{ witchWord() }} for <i>"{{ store.lastSearch }}"</i></h4>
             </div>
             <div v-for="data in store.datas" class="col-12 col-sm-6 col-md-4 col-lg-3 pb-5 px-4">
                 <AppCard :cardData="data" @focusFilm="onFocus($event)"/>
@@ -42,7 +42,7 @@
         methods: {
             witchWord(){
                 let result = "result";
-                if(this.store.dim > 1 || this.store.dim == 0)
+                if(this.store.datas.length > 1 || this.store.datas.length == 0)
                     result += "s";
 
                 return result;

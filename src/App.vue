@@ -41,8 +41,7 @@
                     axios.get(query).then( (response) => {
                       for(let i = 0; i < response.data.results.length; i++)
                           this.store.datas.push({type: "movie", title: response.data.results[i].title, originalTitle: response.data.results[i].original_title, lang: response.data.results[i].original_language, overview: response.data.results[i].overview, imgSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].poster_path, vote: response.data.results[i].vote_average, id: response.data.results[i].id, voteCount: response.data.results[i].vote_count, popularity: response.data.results[i].popularity, releaseDate: response.data.results[i].release_date, backdropSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].backdrop_path, genreIds: response.data.results[i].genre_ids});
-                      
-                      this.store.dim += response.data.results.length;
+
                       objReference.data = this.store.datas;
                       
                       switch(store.filter){
@@ -69,7 +68,6 @@
                       for(let i = 0; i < response.data.results.length; i++)
                         this.store.datas.push({type: "tv show", title: response.data.results[i].name, originalTitle: response.data.results[i].original_name, lang: response.data.results[i].original_language, overview: response.data.results[i].overview, imgSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].poster_path, vote: response.data.results[i].vote_average, id: response.data.results[i].id, voteCount: response.data.results[i].vote_count, popularity: response.data.results[i].popularity, releaseDate: response.data.results[i].first_air_date, backdropSrc: "https://image.tmdb.org/t/p/original" + response.data.results[i].backdrop_path, genreIds: response.data.results[i].genre_ids});
                       
-                      this.store.dim += response.data.results.length;
                       objReference.data = this.store.datas;
 
                       switch(store.filter){
@@ -87,7 +85,6 @@
                       }
 
                       this.store.datas = objReference.data;
-
                       });
                     }
     },
