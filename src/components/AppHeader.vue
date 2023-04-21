@@ -6,7 +6,7 @@
         </div>
         <div class="d-flex flex-column">
             <div class="position-relative">
-                <input type="text" placeholder="Search..."  v-model="input" @keyup.enter="search()">
+                <input type="text" placeholder="Search..."  maxlength="100" v-model="input" @keyup.enter="search()">
                 <div class="img-container" @click="search()">
                     <img src="../assets/img/magnifying-glass.svg" alt="magnyfing-glass">
                 </div>

@@ -79,5 +79,6 @@
         border: 1px solid lightgray;
         border-radius: 4px;
         padding: 1rem 2rem;
+        word-break: break-word;
     }
 </style>
