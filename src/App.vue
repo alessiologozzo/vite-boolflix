@@ -33,7 +33,6 @@
                   this.store.focus.isFocused = false;
                   this.store.focus.hasQueried = false;
                   this.store.datas = [];
-                  this.store.dim = 0;
                   let objReference = {data: undefined};
 
                   if(this.store.filter != "tv"){
